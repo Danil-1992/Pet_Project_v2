@@ -11,7 +11,7 @@ export const signIn = createAsyncThunk('user/signin', async (data: UserLogin) =>
   } catch (error) {
     if (error instanceof AxiosError) {
       console.log(error);
-      //   throw new Error((error.response?.data as { message: string }).message, { cause: error });
+
     }
     throw error;
   }

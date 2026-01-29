@@ -4,22 +4,25 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
     "db": "npx sequelize db:drop && npx sequelize db:create && npx sequelize db:migrate && npx sequelize db:seed:all",
-    "dev": "node --watch src/server.js"
+    "dev": "node --watch src/server.js",
+    "lint": "eslint .",
+    "lint:fix": "eslint . --fix",
+    "test": "jest",
+    "test:watch": "jest --watch"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "type": "commonjs",
   "devDependencies": {
-    "@elbrus/eslint-config": "^1.1.0",
-    "@elbrus/eslint-plugin": "^1.0.1",
     "@eslint/js": "^9.39.2",
     "@eslint/json": "^0.14.0",
     "eslint": "^9.39.2",
-    "globals": "^17.0.0",
-    "sequelize-cli": "^6.6.5"
+    "globals": "^17.2.0",
+    "jest": "^30.2.0",
+    "sequelize-cli": "^6.6.5",
+    "supertest": "^7.2.2"
   },
   "dependencies": {
     "amqplib": "^0.10.9",
@@ -32,6 +35,7 @@
     "jsonwebtoken": "^9.0.3",
     "pg": "^8.16.3",
     "pg-hstore": "^2.3.4",
+    "redis": "^5.10.0",
     "sequelize": "^6.37.7",
     "socket.io": "^4.8.3"
   }

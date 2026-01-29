@@ -7,7 +7,7 @@ class GoodController {
       res.json(result);
     } catch (error) {
       console.log(error);
-      res.status(500).json({message: "Не удалось загрузить товары"})
+      res.status(500).json({ message: 'Не удалось загрузить товары' });
     }
   }
 
@@ -30,7 +30,18 @@ class GoodController {
       res.json(result);
     } catch (error) {
       console.log(error);
-      res.status(500).json({message: "Ошибка при удалении товара"})
+      res.status(500).json({ message: 'Ошибка при удалении товара' });
+    }
+  }
+
+  static async getOneCard(req, res) {
+    try {
+      const { id } = req.params;
+      const result = await GoodService.getOneCard(id);
+      res.json(result);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Ошибка при получении товара' });
     }
   }
 }

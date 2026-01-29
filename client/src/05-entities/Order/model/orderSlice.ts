@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { orderArrayType } from '../types/orderSchema';
-import { addOrder } from './orderThunks';
+import type { orderSchemaWithOrItType } from '../types/orderSchema';
+import { getOrdersByUserId } from './orderThunks';
 
 type initialStateType = {
-  orders: orderArrayType;
+  orders: orderSchemaWithOrItType;
   loading: boolean;
   error: string | null;
 };
@@ -19,21 +19,35 @@ export const orderSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builders) => {
+    // builders
+    //   .addCase(addOrder.pending, (state) => {
+    //     state.loading = true;
+    //     state.error = null;
+    //   })
+    //   .addCase(addOrder.fulfilled, (state, { payload }) => {
+    //     state.orders.push(payload);
+    //     state.loading = false;
+    //     state.error = null;
+    //   })
+    //   .addCase(addOrder.rejected, (state, action) => {
+    //     state.loading = false;
+    //     state.error = action.error.message ?? 'Ошибка при добавлении заказа';
+    //   });
     builders
-      .addCase(addOrder.pending, (state) => {
+      .addCase(getOrdersByUserId.pending, (state) => {
         state.loading = true;
         state.error = null;
       })
-      .addCase(addOrder.fulfilled, (state, { payload }) => {
-        state.orders.push(payload);
+      .addCase(getOrdersByUserId.fulfilled, (state, { payload }) => {
         state.loading = false;
         state.error = null;
+        state.orders = payload;
       })
-      .addCase(addOrder.rejected, (state, action) => {
+      .addCase(getOrdersByUserId.rejected, (state, action) => {
         state.loading = false;
-        state.error = action.error.message ?? 'Ошибка при добавлении заказа';
+        state.error = action.error.message ?? 'Ошибка при загрузке заказов';
       });
   },
 });
 
-export default orderSlice.reducer
+export default orderSlice.reducer;

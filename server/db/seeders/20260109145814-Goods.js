@@ -5,7 +5,7 @@ module.exports = {
   async up(queryInterface, Sequelize) {
     await queryInterface.bulkInsert('Goods', [
       {
-        name: "Джинсы Levi's 511",
+        name: "Джинсы Levi s 511",
         slug: 'levis-511-jeans',
         description: 'Классические slim джинсы из денима',
         price: 5999,

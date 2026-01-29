@@ -1,9 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit';
-import type { favoritArrayType } from '../types/favoritSchema';
 import { addFavorit, deleteFavorit, getFavorits } from './favoritThunks';
+import type { favoritsArraType } from '../types/favoritSchema';
 
 type initialStateType = {
-  favorits: favoritArrayType;
+  favorits: favoritsArraType;
   loading: boolean;
   error: string | null;
 };
@@ -19,7 +19,6 @@ export const favoritSlice = createSlice({
   initialState,
   reducers: {},
   extraReducers: (builder) => {
-    // ← один builder для всех!
     builder
       .addCase(getFavorits.pending, (state) => {
         state.loading = true;

@@ -27,6 +27,16 @@ class OrderController {
       res.status(500).json({ message: 'Ошибка при создании заказа' });
     }
   }
+
+  static async getOrdersByUserId(req, res) {
+    try {
+      const { user } = res.locals;
+      const data = await OrderService.getOrdersByUserId(user.id);
+      res.json(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 }
 
 module.exports = OrderController;

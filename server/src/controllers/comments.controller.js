@@ -28,6 +28,17 @@ class ResponseController {
       res.status(500).json({ message: 'Ошибка при добавлении комментария' });
     }
   }
+
+  static async getAllResponses(req, res) {
+    try {
+      const { user } = res.locals;
+      const data = await ResponseService.getAllResponses(user.id);
+      res.json(data);
+    } catch (error) {
+      console.log(error);
+      throw error;
+    }
+  }
 }
 
 module.exports = ResponseController;

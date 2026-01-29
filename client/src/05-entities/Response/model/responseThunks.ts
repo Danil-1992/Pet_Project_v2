@@ -16,3 +16,11 @@ export const addComment = createAsyncThunk(
     return res;
   },
 );
+
+export const getAllResponsesByUser = createAsyncThunk(
+  'response/getByUserId',
+  async (signal: AbortSignal) => {
+    const data = await ResponseService.getAllResponsesByUser(signal);
+    return data;
+  },
+);

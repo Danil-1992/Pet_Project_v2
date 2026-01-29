@@ -1,12 +1,8 @@
-const { Favorit } = require('../../db/models');
+const { Favorit, Good } = require('../../db/models');
 
 class FavoritService {
-  static getFavorits(user_id) {
-    return Favorit.findAll({
-      where: {
-        user_id,
-      },
-    });
+  static getAllFavoritsByUserId(user_id) {
+    return Favorit.findAll({ where: { user_id }, include: { model: Good } });
   }
 
   static addLike(user_id, good_id) {
@@ -15,6 +11,10 @@ class FavoritService {
 
   static deleteLike(user_id, good_id) {
     return Favorit.destroy({ where: { user_id, good_id } });
+  }
+
+  static getFavoritByPk(id) {
+    return Favorit.findByPk(id, { include: { model: Good } });
   }
 }
 

@@ -1,26 +1,35 @@
+
 import js from '@eslint/js';
 import globals from 'globals';
 import reactHooks from 'eslint-plugin-react-hooks';
 import react from 'eslint-plugin-react';
-import tseslint from 'typescript-eslint';
-import elbrusConfig from '@elbrus/eslint-config';
-import elbrusPlugin from '@elbrus/eslint-plugin';
+import tsParser from '@typescript-eslint/parser';
 import fsdLayers from 'eslint-plugin-fsd-layers';
 import reactRefresh from 'eslint-plugin-react-refresh';
 
-export default tseslint.config(
+
+const tseslint = await import('@typescript-eslint/eslint-plugin');
+
+export default [
   { ignores: ['dist'] },
+  
+
+  tseslint.default.configs?.stylisticTypeChecked || 
+  tseslint.configs?.stylisticTypeChecked ||
+  { plugins: { '@typescript-eslint': tseslint.default || tseslint } },
+  
+  tseslint.default.configs?.strictTypeChecked ||
+  tseslint.configs?.strictTypeChecked ||
+  { plugins: { '@typescript-eslint': tseslint.default || tseslint } },
+  
+  js.configs.recommended,
+  
   {
-    extends: [
-      js.configs.recommended,
-      ...elbrusConfig,
-      tseslint.configs.stylisticTypeChecked,
-      tseslint.configs.strictTypeChecked,
-    ],
     files: ['**/*.{ts,tsx}'],
     languageOptions: {
       ecmaVersion: 2020,
       globals: globals.browser,
+      parser: tsParser,
       parserOptions: {
         projectService: true,
         tsconfigRootDir: import.meta.dirname,
@@ -30,13 +39,10 @@ export default tseslint.config(
       'react-hooks': reactHooks,
       'react-refresh': reactRefresh,
       'fsd-layers': fsdLayers,
-      '@elbrus': elbrusPlugin,
+      '@typescript-eslint': tseslint.default || tseslint,
     },
     rules: {
       ...reactHooks.configs.recommended.rules,
-
-      // Общие правила
-      '@elbrus/prefer-for-of': 'error',
       'fsd-layers/no-import-from-top': 'error',
       'class-methods-use-this': 'warn',
       'no-console': 'off',
@@ -61,8 +67,6 @@ export default tseslint.config(
           ignoreVoidOperator: true,
         },
       ],
-
-      // Возвращаемые значения функций
       '@typescript-eslint/explicit-function-return-type': [
         'error',
         {
@@ -74,8 +78,6 @@ export default tseslint.config(
           allowFunctionsWithoutTypeParameters: false,
         },
       ],
-
-      // Правила работы с типами
       '@typescript-eslint/consistent-type-definitions': ['warn', 'type'],
       '@typescript-eslint/consistent-type-imports': ['error', { prefer: 'type-imports' }],
       '@typescript-eslint/consistent-type-exports': [
@@ -87,6 +89,7 @@ export default tseslint.config(
     },
   },
   {
+    files: ['**/*.{js,jsx,ts,tsx}'],
     plugins: {
       react,
     },
@@ -96,4 +99,4 @@ export default tseslint.config(
       'react/no-array-index-key': 'error',
     },
   },
-);
+];

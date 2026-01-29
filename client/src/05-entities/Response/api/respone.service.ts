@@ -1,5 +1,5 @@
 import { proceedError } from '@/06-shared/catchError';
-import { responseArraySchema, responseSchems } from '../types/responseSchema';
+import { responseArrayByUserSchema, responseArraySchema, responseSchems } from '../types/responseSchema';
 import axiosInstance from '@/06-shared/api/axiosInstance';
 
 export const ResponseService = {
@@ -22,6 +22,17 @@ export const ResponseService = {
       return validDate;
     } catch (error) {
       proceedError(error);
+    }
+  },
+
+  async getAllResponsesByUser(signal: AbortSignal) {
+    try {
+      const response = await axiosInstance.get('/responses/', { signal });
+      const validData = responseArrayByUserSchema.parse(response.data);
+      return validData;
+    } catch (error) {
+      console.log(error);
+      throw error;
     }
   },
 };

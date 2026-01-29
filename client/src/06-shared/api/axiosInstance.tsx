@@ -40,7 +40,6 @@ axiosInstance.interceptors.response.use(
         prev.headers.Authorization = `Bearer ${newToken}`;
         return axiosInstance(prev);
       } catch (refreshError) {
-        // Если refresh не удался, очищаем токен и перенаправляем на страницу входа
         clearAccessToken();
         return Promise.reject(refreshError);
       }

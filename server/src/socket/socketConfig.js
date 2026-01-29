@@ -5,4 +5,4 @@ const corsOption = {
   allowedHeaders: ['Content-Type', 'Authorization'],
 };
 
-module.exports = corsOption
+module.exports = corsOption;

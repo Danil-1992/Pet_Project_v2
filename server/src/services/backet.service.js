@@ -49,7 +49,7 @@ class BacketService {
   }
 
   static async clearBacket(good_id, user_id) {
-    const result = await Backet.destroy({ where: { good_id, user_id } });
+    const result = await Backet.destroy({ where: { user_id, good_id } });
     return result;
   }
 }

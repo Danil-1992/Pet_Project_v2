@@ -23,5 +23,9 @@ class GoodService {
     await good.reload();
     return good;
   }
+
+  static getOneCard(id) {
+    return Good.findByPk(id);
+  }
 }
 module.exports = GoodService;

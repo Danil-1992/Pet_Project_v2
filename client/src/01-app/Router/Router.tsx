@@ -8,6 +8,7 @@ import Backet from '@/02-pages/Backet/Backet';
 import AdminPage from '@/02-pages/AdminPage/AdminPage';
 import ProtectedRoute from './ProtectedRoute';
 import PublicRoute from './PublicRoute';
+import ProfilePage from '@/02-pages/ProfilePage/ProfilePage';
 
 export default function Router(): React.JSX.Element {
   return (
@@ -18,12 +19,13 @@ export default function Router(): React.JSX.Element {
             <Route element={<ProtectedRoute allowedRoles={['user']} />}>
               <Route path="/" element={<MainPage />} />
               <Route path="/good/:id" element={<DetailsPage />} />
-              <Route path="/backet" element={<Backet />} />
+              <Route path="/basket" element={<Backet />} />
+              <Route path="/profile" element={<ProfilePage />} />
             </Route>
             <Route element={<ProtectedRoute allowedRoles={['admin']} />}>
               <Route path="/admin" element={<AdminPage />} />
             </Route>
-            <Route element={<PublicRoute/>}>
+            <Route element={<PublicRoute />}>
               <Route path="enter" element={<ChooseEnterOrRegister />} />
             </Route>
           </Route>

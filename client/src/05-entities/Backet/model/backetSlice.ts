@@ -47,6 +47,7 @@ export const backetSlice = createSlice({
         const good = state.backetGoods.find((el) => el.good_id === payload.good_id);
         if (good) {
           good.quantity += 1;
+          good.Good.quantity -= 1;
         } else {
           state.backetGoods.push(payload);
         }
@@ -64,6 +65,7 @@ export const backetSlice = createSlice({
         const good = state.backetGoods.find((el) => el.good_id === payload.good_id);
         if (good) {
           good.quantity -= 1;
+          good.Good.quantity+=1
         }
       })
       .addCase(deleteFromBacketIn.rejected, (state, action) => {

@@ -1,8 +1,10 @@
-import type { favoriteType } from '@/05-entities/Favorits/types/favoritSchema';
 import { useAppSelector } from './hooks';
-import type { backetType } from '@/05-entities/Backet/types/backetSchema';
 
-export const useGoodSelectors = (goodId: string): favoriteType | backetType => {
+
+export const useGoodSelectors = (goodId: string):  { 
+  isLike: boolean; 
+  backet: { quantity: number; exists: boolean } 
+} => {
   const isLike = useAppSelector(
     (state) => state.favorits.favorits.some((el) => el.good_id === Number(goodId)),
     (prev, next) => prev === next,

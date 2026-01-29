@@ -1,5 +1,4 @@
 import { addToBacketIn, deleteFromBacketIn } from '@/05-entities/Backet/model/backetThunks';
-import type { backetType } from '@/05-entities/Backet/types/backetSchema';
 import { addToBacket, deleteFromBacket } from '@/05-entities/Goods/model/goodThunks';
 import type { goodType } from '@/05-entities/Goods/types/goodSchema';
 import { useAppDispatch } from '@/06-shared/hooks/hooks';
@@ -10,7 +9,10 @@ export default function AddToBacket({
   backet,
 }: {
   good: goodType;
-  backet: backetType;
+  backet: {
+    quantity: number;
+    exists: boolean;
+  };
 }): React.JSX.Element {
   const dispatch = useAppDispatch();
   const deleteFromBacketHandler = async (): Promise<void> => {
@@ -30,7 +32,6 @@ export default function AddToBacket({
       console.log(error);
     }
   };
-
 
   return (
     <div>

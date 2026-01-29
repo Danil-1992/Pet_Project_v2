@@ -32,4 +32,14 @@ export const GoodService = {
       proceedError(error);
     }
   },
+
+  async getOneCard(id: string) {
+    try {
+      const response = await axiosInstance.get(`/goods/${id}`);
+      const validDate = goodSchema.parse(response.data);
+      return validDate;
+    } catch (error) {
+      proceedError(error);
+    }
+  },
 };

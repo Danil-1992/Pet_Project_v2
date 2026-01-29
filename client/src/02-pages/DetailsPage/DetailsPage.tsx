@@ -1,5 +1,6 @@
 import ModalForm from '@/04-features/addComment/ModalForm';
 import { getOneCard } from '@/05-entities/Goods/model/goodSlice';
+import { getOneCards } from '@/05-entities/Goods/model/goodThunks';
 import { addComment, getAllComments } from '@/05-entities/Response/model/responseThunks';
 import { useAppDispatch, useAppSelector } from '@/06-shared/hooks/hooks';
 import React, { useEffect, useState } from 'react';
@@ -10,16 +11,20 @@ export default function DetailsPage(): React.JSX.Element {
   const [comment, setComment] = useState<string>('');
   const { id } = useParams();
   const dispatch = useAppDispatch();
-  const { card } = useAppSelector((store) => store.goods);
+  const { goods, card } = useAppSelector((store) => store.goods);
   const { responses } = useAppSelector((store) => store.responses);
-  console.log(comment);
+
 
   useEffect(() => {
     if (!id) {
       return;
     }
-    dispatch(getOneCard(Number(id)));
-  }, []);
+    if (goods.length > 0) {
+      dispatch(getOneCard(Number(id)));
+    } else {
+      dispatch(getOneCards(id));
+    }
+  }, [id]);
 
   useEffect(() => {
     if (!id) {

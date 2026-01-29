@@ -1,7 +1,7 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { arrayGoodType, goodType } from '../types/goodSchema';
-import { addToBacket, deleteFromBacket, getAllGoods } from './goodThunks';
+import { addToBacket, deleteFromBacket, getAllGoods, getOneCards } from './goodThunks';
 
 type initialStateType = {
   goods: arrayGoodType;
@@ -68,6 +68,20 @@ export const goodSlice = createSlice({
       .addCase(deleteFromBacket.rejected, (state, action) => {
         state.loading = false;
         state.error = action.error.message ?? 'Ошибка при удалении из корзины';
+      });
+    builders
+      .addCase(getOneCards.pending, (state) => {
+        state.loading = true;
+        state.error = null;
+      })
+      .addCase(getOneCards.fulfilled, (state, { payload }) => {
+        state.loading = false;
+        state.error = null;
+        state.card = payload;
+      })
+      .addCase(getOneCards.rejected, (state, action) => {
+        state.loading = false;
+        state.error = action.error.message ?? 'Ошибка при загрузке карточки';
       });
   },
 });

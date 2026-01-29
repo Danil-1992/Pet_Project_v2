@@ -15,3 +15,8 @@ export const deleteFromBacket = createAsyncThunk('good/delete', async (goodId: s
   const result = await GoodService.deleteFromBacket(goodId);
   return result;
 });
+
+export const getOneCards = createAsyncThunk('goods/onecard', async (id: string) => {
+  const result = await GoodService.getOneCard(id);
+  return result;
+});

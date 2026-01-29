@@ -1,5 +1,6 @@
 import NavBar from '@/03-widgets/NavBar/NavBar';
 import { getFavorits } from '@/05-entities/Favorits/models/favoritThunks';
+import { getAllGoods } from '@/05-entities/Goods/model/goodThunks';
 import { refresh } from '@/05-entities/User/model/userThunks';
 import { useAppDispatch, useAppSelector } from '@/06-shared/hooks/hooks';
 import React, { useEffect } from 'react';
@@ -15,9 +16,13 @@ console.log(user);
   }, []);
 
   useEffect(() => {
-    if (!user?.id) {
-      return;
-    }
+      const abortController = new AbortController();
+      const { signal } = abortController;
+      void dispatch(getAllGoods(signal));
+      return () => abortController.abort();
+    }, [dispatch]);
+
+  useEffect(() => {
     const abortController = new AbortController();
     const { signal } = abortController;
     void dispatch(getFavorits({ signal }));

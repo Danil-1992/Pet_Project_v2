@@ -9,3 +9,8 @@ export const addOrder = createAsyncThunk(
     return result;
   },
 );
+
+export const getOrdersByUserId = createAsyncThunk('orders/get', async (signal: AbortSignal) => {
+  const data = await OrderService.getOrdersByUserId(signal);
+  return data;
+});

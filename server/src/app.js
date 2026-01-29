@@ -10,7 +10,6 @@ const cors = require('cors');
 const app = express();
 const socketIO = require('./socket/socket');
 
-
 const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 const http = require('http');
@@ -24,36 +23,44 @@ app.use(cors(corsOption));
 const server = http.createServer(app);
 const io = socketIO.init(server);
 
+// Проверка токена
 io.use((socket, next) => {
-  console.log('Подключение');
   const cookies = cookie.parse(socket.handshake.headers.cookie || '');
   const token = cookies.refreshToken;
- 
 
   if (!token) {
-    return new Error('Токена нет');
+    return next(new Error('Токена нет'));
   }
+
   try {
     const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET);
     socket.user = decoded;
     next();
   } catch (error) {
-    next(new Error('Неверный токен'));
+    // Определяем тип ошибки
+    if (error.name === 'TokenExpiredError') {
+      next(new Error('Токен истек'));
+    } else {
+      next(new Error('Неверный токен'));
+    }
   }
 });
 
 io.on('connection', (socket) => {
   const userId = socket.user.user.id;
-  console.log(`Подключился`);
+  console.log(`Подключился пользователь ${userId}`);
+
   socket.join(`user-${userId}`);
+
 
   socket.on('sent_notification', (data) => {
     if (data) {
       socket.emit('waitNotify', { message: 'Покупка оплачена' });
     }
   });
+
   socket.on('disconnect', () => {
-    console.log('Пользователь вышел из чата');
+    console.log(`Пользователь ${userId} отключился`);
   });
 });
 
@@ -63,7 +70,5 @@ app.use('/api/favorits', favoritRouter);
 app.use('/api/responses', responseRouter);
 app.use('/api/backet', backetRouter);
 app.use('/api/orders', orderRouter);
-
-
 
 module.exports = server;

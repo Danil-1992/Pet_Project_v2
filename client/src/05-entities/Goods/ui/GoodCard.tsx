@@ -1,24 +1,12 @@
-import React, { memo, useMemo } from 'react';
+import React, { memo } from 'react';
 import type { goodType } from '../types/goodSchema';
-import { useAppDispatch, useAppSelector } from '@/06-shared/hooks/hooks';
 import FavoritButton from '@/05-entities/Favorits/ui/FavoritButton';
 import { Link } from 'react-router';
 import AddToBacket from '@/04-features/AddToBacket/AddToBacket';
 import { useGoodSelectors } from '@/06-shared/hooks/hooksMemo';
 
-const GoodCard = memo(({ good }: { good: goodType }): React.JSX.Element => {
-  const dispatch = useAppDispatch();
-  // const isLike = useAppSelector(
-  //   (state) => state.favorits.favorits.some((el) => el.good_id === good.id),
-  //   // 👇 Ключевое: сравниваем boolean, а не массивы!
-  //   (prevIsLike, nextIsLike) => prevIsLike === nextIsLike,
-  // );
-  // const { backetGoods } = useAppSelector((store) => store.backet);
-  // const backet = useMemo(
-  //   () => backetGoods.find((el) => el.good_id === good.id),
-  //   [backetGoods, good.id],
-  // );
-  const { isLike, backet } = useGoodSelectors(good.id);
+const GoodCard = ({ good }: { good: goodType }): React.JSX.Element => {
+  const { isLike, backet } = useGoodSelectors(good.id.toString());
 
   console.log(backet);
 
@@ -55,40 +43,9 @@ const GoodCard = memo(({ good }: { good: goodType }): React.JSX.Element => {
           Остаток {good.quantity}
         </div>
         <AddToBacket good={good} backet={backet} />
-        {/* {good.quantity === 0 && (
-          <div>
-            <div>Товар зарезервирован</div>
-            <div style={{ cursor: 'pointer' }} onClick={deleteFromBacketHandler}>
-              -
-            </div>
-          </div>
-        )}
-        {(backet?.quantity === 0) | (backet?.quantity === undefined) && (
-          <button onClick={addToBacketHandler}>Добавить в корзину</button>
-        )}
-        {backet?.quantity > 0 && backet?.quantity !== undefined && good.quantity > 0 && (
-          <div
-            style={{
-              display: 'flex',
-              gap: '11px',
-              width: '50%',
-              flexGrow: 5,
-              justifyContent: 'end',
-              marginRight: '15px',
-            }}
-          >
-            <p style={{ cursor: 'pointer' }} onClick={addToBacketHandler}>
-              +
-            </p>
-            <p>{backet?.quantity}</p>
-            <p style={{ cursor: 'pointer' }} onClick={deleteFromBacketHandler}>
-              -
-            </p>
-          </div>
-        )} */}
       </div>
     </div>
   );
-});
+};
 
-export default GoodCard;
+export default memo(GoodCard);

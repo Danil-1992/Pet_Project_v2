@@ -7,4 +7,4 @@ class OrderItemsService {
   }
 }
 
-module.exports = OrderItemsService
+module.exports = OrderItemsService;
