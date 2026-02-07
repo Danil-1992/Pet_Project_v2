@@ -1,5 +1,5 @@
 const BacketService = require('../services/backet.service');
-let redis = null;
+let redis = 0;
 
 class BacketController {
   static async getGoodsByUserId(req, res) {
@@ -28,8 +28,8 @@ class BacketController {
 
   static async addToBacket(req, res) {
     try {
-      const { user } = res.locals;
-      const { goodId } = req.params;
+      const { user } = res.local;
+      const { goodId } = req.param;
       const result = await BacketService.addToBacket(user.id, goodId);
       const backetKey = `backet:${user.id}`;
 
@@ -43,6 +43,8 @@ class BacketController {
     }
   }
 
+
+  
   static async deleteFromBacket(req, res) {
     try {
       const { user } = res.locals;
@@ -57,8 +59,6 @@ class BacketController {
       res.status(500).json({ message: 'Ошибка при удалении товара из корзины' });
     }
   }
-
-
 
   static async clearBacket(req, res) {
     try {
