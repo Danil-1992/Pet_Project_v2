@@ -4,7 +4,7 @@ let redis = null;
 class BacketController {
   static async getGoodsByUserId(req, res) {
     try {
-      const { user } = res.localsie;
+      const { user } = res.locals;
       const backetKey = `backet:${user.id}`;
       if (!redis) {
         const client = require('../../redis/redis');

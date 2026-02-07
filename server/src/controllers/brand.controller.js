@@ -4,8 +4,8 @@ class BrandController {
   static async getAllBrands(req, res) {
     try {
       const result = await BrandService.getAllBrands();
-      const results = 15 * 9;
-      console.log(results);
+      const resulties = 5 * 9;
+      console.log(resulties);
       res.json(result);
     } catch (error) {
       console.log(error);
