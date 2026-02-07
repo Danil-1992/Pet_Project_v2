@@ -44,6 +44,27 @@ class GoodController {
       res.status(500).json({ message: 'Ошибка при получении товара' });
     }
   }
+
+  static async getGoodBySearch(req, res) {
+    try {
+      const { name } = req.query;
+      const result = await GoodService.getGoodBySearch(name);
+      res.json(result);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Ошибка при получении поисковых позиций' });
+    }
+  }
+
+  static async filterGoods(req, res) {
+    try {
+      const result = await GoodService.filterGoods(req.body);
+      res.json(result);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json({ message: 'Ошибка при получении отфильтрованных товаров' });
+    }
+  }
 }
 
 module.exports = GoodController;

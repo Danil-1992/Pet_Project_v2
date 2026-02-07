@@ -1,4 +1,6 @@
 import backetSlice from '@/05-entities/Backet/model/backetSlice';
+import brandsSlice from '@/05-entities/Brand/model/brandSlice';
+import categoriesSlice from '@/05-entities/Category/model/categorySlice';
 import favoritSlice from '@/05-entities/Favorits/models/favoritSlice';
 import goodSlice from '@/05-entities/Goods/model/goodSlice';
 import orderSlice from '@/05-entities/Order/model/orderSlice';
@@ -14,6 +16,8 @@ export const store = configureStore({
     responses: responseSlice,
     backet: backetSlice,
     orders: orderSlice,
+    categories: categoriesSlice,
+    brands: brandsSlice,
   },
 });
 

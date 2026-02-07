@@ -4,8 +4,6 @@ import React, { useMemo } from 'react';
 
 export default function MainPage(): React.JSX.Element {
   const { goods } = useAppSelector((store) => store.goods);
-  const { user } = useAppSelector((store) => store.user);
-  console.log(user);
   console.log(goods);
 
   const memoizedGoods = useMemo(() => goods, [goods]);

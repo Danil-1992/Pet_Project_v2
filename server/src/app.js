@@ -14,6 +14,8 @@ const jwt = require('jsonwebtoken');
 const cookie = require('cookie');
 const http = require('http');
 const corsOption = require('./socket/socketConfig');
+const categoryRouter = require('./routers/category.router');
+const brandRouter = require('./routers/brand.router');
 
 app.use(express.json());
 app.use(cookieParser());
@@ -52,7 +54,6 @@ io.on('connection', (socket) => {
 
   socket.join(`user-${userId}`);
 
-
   socket.on('sent_notification', (data) => {
     if (data) {
       socket.emit('waitNotify', { message: 'Покупка оплачена' });
@@ -70,5 +71,7 @@ app.use('/api/favorits', favoritRouter);
 app.use('/api/responses', responseRouter);
 app.use('/api/backet', backetRouter);
 app.use('/api/orders', orderRouter);
+app.use('/api/categories', categoryRouter);
+app.use('/api/brands', brandRouter);
 
 module.exports = server;

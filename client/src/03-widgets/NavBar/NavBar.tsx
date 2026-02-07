@@ -40,29 +40,41 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useAppDispatch, useAppSelector } from '@/06-shared/hooks/hooks';
 import { signOut } from '@/05-entities/User/model/userThunks';
+import type { SetURLSearchParams } from 'react-router';
 import { Link, useNavigate } from 'react-router';
 import { getAllGoodsFromBacket } from '@/05-entities/Backet/model/backetThunks';
-// import { getAllCategory } from '@/05-entities/Category/model/categoryThunks';
-// import { getAllBrands } from '@/05-entities/Brand/model/brandThunks';
+import { getAllCategories } from '@/05-entities/Category/model/categoryThunks';
+import { getAllBrands } from '@/05-entities/Brand/model/brandThunks';
+import type { filterGoodsType } from '@/05-entities/Goods/types/goodSchema';
+import { filterGoods } from '@/05-entities/Goods/model/goodThunks';
 // import { filterGoods } from '@/05-entities/Goods/model/goodThunks';
 // import { type filterGoodsType } from '@/05-entities/Goods/types/good.types';
 // import { getGoodsOfBasketBuUserId } from '@/05-entities/Basket/model/basketThunks';
 // import { aiFilter } from '@/05-entities/Ai/model/aiThunks';
 // import type { passForType } from '@/05-entities/Ai/types/aiSchema';
 
-export default function NavBar(): React.JSX.Element {
+export default function NavBar({
+  search,
+  setSearch,
+  setSearchParams,
+}: {
+  search: string;
+  setSearch: React.Dispatch<React.SetStateAction<string>>;
+  setSearchParams: SetURLSearchParams;
+}): React.JSX.Element {
   const [showList, setShowList] = useState(false);
   const [filter, setFilter] = useState(false);
   const [isCall, setIsCall] = useState(true);
   const [isChat, setIsChat] = useState(false);
   const [message, setMessage] = useState('');
-  const [input, setInput] = useState({ categoryId: '', brandId: '', minPrice: '', maxPrice: '' });
+  const [input, setInput] = useState({ category_id: '', brand_id: '', minPrice: '', maxPrice: '' });
   const { user } = useAppSelector((state) => state.user);
-  // const { categories } = useAppSelector((state) => state.categories);
-  // const { brands } = useAppSelector((state) => state.brands);
+  const { categories } = useAppSelector((state) => state.categories);
+  const { brands } = useAppSelector((state) => state.brands);
   // const { basketsGood } = useAppSelector((state) => state.basket);
   // const { pass, dialog } = useAppSelector((state) => state.ai);
-  // console.log(pass);
+
+  console.log(input);
 
   const dispatch = useAppDispatch();
   const navigate = useNavigate();
@@ -82,9 +94,9 @@ export default function NavBar(): React.JSX.Element {
   //   }
   // }, [pass, dispatch, setSearchParams]);
 
-  // const clearObj: filterGoodsType = Object.fromEntries(
-  //   Object.entries(input).filter(([, value]) => value !== ''),
-  // );
+  const clearObj: filterGoodsType = Object.fromEntries(
+    Object.entries(input).filter(([, value]) => value !== ''),
+  );
 
   useEffect(() => {
     const abortController = new AbortController();
@@ -95,10 +107,11 @@ export default function NavBar(): React.JSX.Element {
     };
   }, []);
 
-  // const makeFilter = (): void => {
-  //   setSearchParams(clearObj);
-  //   void dispatch(filterGoods(clearObj));
-  // };
+  const makeFilter = (): void => {
+    setSearchParams(clearObj);
+    void dispatch(filterGoods(clearObj)).unwrap();
+    setSearch('');
+  };
 
   const inputHandler = (
     e: React.ChangeEvent<HTMLInputElement> | React.ChangeEvent<HTMLSelectElement>,
@@ -106,23 +119,24 @@ export default function NavBar(): React.JSX.Element {
     setInput((prev) => ({ ...prev, [e.target.name]: e.target.value }));
   };
 
-  // const loadingCategory = () => {
-  //   const abortController = new AbortController();
-  //   const { signal } = abortController;
-  //   void dispatch(getAllCategory({ signal }));
-  //   return () => {
-  //     abortController.abort();
-  //   };
-  // };
+  useEffect(() => {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    void dispatch(getAllCategories({ signal }));
+    return () => {
+      abortController.abort();
+    };
+  }, [dispatch]);
 
-  // const loadingBrand = () => {
-  //   const abortController = new AbortController();
-  //   const { signal } = abortController;
-  //   void dispatch(getAllBrands({ signal }));
-  //   return () => {
-  //     abortController.abort();
-  //   };
-  // };
+  useEffect(() => {
+    const abortController = new AbortController();
+    const { signal } = abortController;
+    void dispatch(getAllBrands({ signal }));
+    return () => {
+      abortController.abort();
+    };
+  }, [dispatch]);
+
   const logoutHandler = (): void => {
     void dispatch(signOut());
   };
@@ -201,7 +215,7 @@ export default function NavBar(): React.JSX.Element {
             >
               <p
                 onClick={() => {
-                  // setSearch('');
+                  setSearch('');
                   void navigate('/');
                   setShowList(false);
                 }}
@@ -214,6 +228,7 @@ export default function NavBar(): React.JSX.Element {
                 onClick={() => {
                   void navigate('/profile');
                   setShowList(false);
+                  setSearch('');
                 }}
               >
                 Профиль
@@ -223,8 +238,6 @@ export default function NavBar(): React.JSX.Element {
                 onClick={() => {
                   setShowList(false);
                   setFilter(true);
-                  loadingCategory();
-                  loadingBrand();
                 }}
               >
                 Фильтр
@@ -246,7 +259,7 @@ export default function NavBar(): React.JSX.Element {
             >
               <div>
                 <div style={{ marginTop: '20px', marginBottom: '10px' }}>Категория</div>
-                <select name="categoryId" onChange={inputHandler}>
+                <select name="category_id" onChange={inputHandler}>
                   <option disabled selected>
                     Выберите категорию
                   </option>
@@ -257,7 +270,7 @@ export default function NavBar(): React.JSX.Element {
                   ))}
                 </select>
                 <div style={{ marginTop: '20px', marginBottom: '10px' }}>Бренд</div>
-                <select name="brandId" onChange={inputHandler}>
+                <select name="brand_id" onChange={inputHandler}>
                   <option disabled selected>
                     Выберите бренд
                   </option>
@@ -316,23 +329,27 @@ export default function NavBar(): React.JSX.Element {
             <div
               style={{ fontSize: '20px', color: '#D5C232', cursor: 'pointer' }}
               onClick={() => {
-                // setSearch('');
-                // setSearchParams({});
+                setSearch('');
+                setSearchParams({});
                 void navigate('/');
               }}
             >
               AMAZON
             </div>
-            {/* <div style={{ position: 'relative' }}>
-              <input
-                type="text"
-                value={search}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Поиск"
-                style={{ paddingLeft: '29px' }}
-              />
+            <div style={{ position: 'relative' }} >
+              <>
+                <input
+                  type="text"
+                  value={search}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Поиск"
+                  style={{ paddingLeft: '29px' }}
+                  onClick={() => navigate("/")}
+                />
+                
+              </>
               <span style={{ position: 'absolute', left: '5px', fontSize: '20px' }}>🔍</span>
-            </div> */}
+            </div>
           </div>
           <div style={{ display: 'flex', justifyContent: 'center', flexGrow: 32 }}>
             <div style={{ color: 'orange', fontSize: '20px' }}>
@@ -342,7 +359,10 @@ export default function NavBar(): React.JSX.Element {
             </div>
           </div>
           <div
-            onClick={() => navigate('/basket')}
+            onClick={() => {
+              setSearch('');
+              navigate('/basket');
+            }}
             style={{
               display: 'flex',
               fontSize: '25px',

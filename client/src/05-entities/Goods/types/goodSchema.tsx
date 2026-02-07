@@ -24,3 +24,12 @@ export type goodType = z.infer<typeof goodSchema>;
 export const arrayGoodSchema = z.array(goodSchema);
 
 export type arrayGoodType = z.infer<typeof arrayGoodSchema>;
+
+export const filterGoods = z.object({
+  categoryId: z.string().optional(),
+  brandId: z.string().optional(),
+  minPrice: z.string().optional(),
+  maxPrice: z.string().optional(),
+});
+
+export type filterGoodsType = z.infer<typeof filterGoods>;

@@ -1,20 +1,27 @@
 import type { PayloadAction } from '@reduxjs/toolkit';
 import { createSlice } from '@reduxjs/toolkit';
 import type { arrayGoodType, goodType } from '../types/goodSchema';
-import { addToBacket, deleteFromBacket, getAllGoods, getOneCards } from './goodThunks';
+import {
+  addToBacket,
+  deleteFromBacket,
+  filterGoods,
+  getAllGoods,
+  getGoodBySearch,
+  getOneCards,
+} from './goodThunks';
 
 type initialStateType = {
   goods: arrayGoodType;
   card: goodType | undefined;
-  loading: boolean;
-  error: string | null;
+  isLoadingGoods: boolean;
+  goodsError: string | null;
 };
 
 const initialState: initialStateType = {
   goods: [],
   card: undefined,
-  loading: false,
-  error: null,
+  isLoadingGoods: false,
+  goodsError: null,
 };
 
 export const goodSlice = createSlice({
@@ -31,57 +38,85 @@ export const goodSlice = createSlice({
   extraReducers: (builders) => {
     builders
       .addCase(getAllGoods.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.isLoadingGoods = true;
+        state.goodsError = null;
       })
       .addCase(getAllGoods.fulfilled, (state, { payload }) => {
-        state.goods = payload;
-        state.loading = false;
-        state.error = null;
+        state.goods = payload as arrayGoodType;
+        state.isLoadingGoods = false;
+        state.goodsError = null;
       })
       .addCase(getAllGoods.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message ?? 'Ошибка при загрузке товаров';
+        state.isLoadingGoods = false;
+        state.goodsError = action.error.message ?? 'Ошибка при загрузке товаров';
       });
     builders
       .addCase(addToBacket.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.isLoadingGoods = true;
+        state.goodsError = null;
       })
       .addCase(addToBacket.fulfilled, (state, { payload }) => {
         state.goods = state.goods.map((el) => (el.id === payload.id ? payload : el));
       })
       .addCase(addToBacket.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message ?? 'Ошибка при добавлении в корзину';
+        state.isLoadingGoods = false;
+        state.goodsError = action.error.message ?? 'Ошибка при добавлении в корзину';
       });
     builders
       .addCase(deleteFromBacket.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.isLoadingGoods = true;
+        state.goodsError = null;
       })
       .addCase(deleteFromBacket.fulfilled, (state, { payload }) => {
         state.goods = state.goods.map((el) => (el.id === payload.id ? payload : el));
-        state.loading = false;
-        state.error = null;
+        state.isLoadingGoods = false;
+        state.goodsError = null;
       })
       .addCase(deleteFromBacket.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message ?? 'Ошибка при удалении из корзины';
+        state.isLoadingGoods = false;
+        state.goodsError = action.error.message ?? 'Ошибка при удалении из корзины';
       });
     builders
       .addCase(getOneCards.pending, (state) => {
-        state.loading = true;
-        state.error = null;
+        state.isLoadingGoods = true;
+        state.goodsError = null;
       })
       .addCase(getOneCards.fulfilled, (state, { payload }) => {
-        state.loading = false;
-        state.error = null;
+        state.isLoadingGoods = false;
+        state.goodsError = null;
         state.card = payload;
       })
       .addCase(getOneCards.rejected, (state, action) => {
-        state.loading = false;
-        state.error = action.error.message ?? 'Ошибка при загрузке карточки';
+        state.isLoadingGoods = false;
+        state.goodsError = action.error.message ?? 'Ошибка при загрузке карточки';
+      });
+    builders
+      .addCase(getGoodBySearch.pending, (state) => {
+        state.isLoadingGoods = true;
+        state.goodsError = null;
+      })
+      .addCase(getGoodBySearch.fulfilled, (state, { payload }) => {
+        state.goods = payload as arrayGoodType;
+        state.isLoadingGoods = false;
+        state.goodsError = null;
+      })
+      .addCase(getGoodBySearch.rejected, (state, action) => {
+        state.isLoadingGoods = false;
+        state.goodsError = action.error.message ?? 'Ошибка при загрузке поискового запроса';
+      });
+    builders
+      .addCase(filterGoods.pending, (state) => {
+        state.isLoadingGoods = true;
+        state.goodsError = null;
+      })
+      .addCase(filterGoods.fulfilled, (state, { payload }) => {
+        state.goods = payload as arrayGoodType;
+        state.isLoadingGoods = false;
+        state.goodsError = null;
+      })
+      .addCase(filterGoods.rejected, (state, action) => {
+        state.isLoadingGoods = false;
+        state.goodsError = action.error.message ?? 'Ошибка при фильтрации товаров';
       });
   },
 });

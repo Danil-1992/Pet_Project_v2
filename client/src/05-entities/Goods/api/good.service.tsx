@@ -1,4 +1,5 @@
 import axiosInstance from '@/06-shared/api/axiosInstance';
+import type { filterGoodsType } from '../types/goodSchema';
 import { arrayGoodSchema, goodSchema } from '../types/goodSchema';
 import { proceedError } from '@/06-shared/catchError';
 
@@ -39,6 +40,28 @@ export const GoodService = {
       const validDate = goodSchema.parse(response.data);
       return validDate;
     } catch (error) {
+      proceedError(error);
+    }
+  },
+
+  async getGoodBySearch(word: string, signal: AbortSignal) {
+    try {
+      const response = await axiosInstance.get(`/goods/search?name=${word}`, { signal });
+      const validDate = arrayGoodSchema.parse(response.data);
+      return validDate;
+    } catch (error) {
+      console.log(error);
+      proceedError(error);
+    }
+  },
+
+  async filterGoods(obj: filterGoodsType) {
+    try {
+      const response = await axiosInstance.post('goods/filtered', obj);
+      const validDate = arrayGoodSchema.parse(response.data);
+      return validDate;
+    } catch (error) {
+      console.log(error);
       proceedError(error);
     }
   },
