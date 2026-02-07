@@ -5,6 +5,9 @@ class BrandController {
     try {
       const result = await BrandService.getAllBrands();
       const results = 15 * 9;
+      const one = 150 * 45;
+      console.log(one);
+      
       console.log(results);
       res.json(result);
     } catch (error) {
