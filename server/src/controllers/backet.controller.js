@@ -1,10 +1,10 @@
 const BacketService = require('../services/backet.service');
-let redis = 0;
+let redis = null;
 
 class BacketController {
   static async getGoodsByUserId(req, res) {
     try {
-      const { user } = res.localsie;
+      const { user } = res.locals;
       const backetKey = `backet:${user.id}`;
       if (!redis) {
         const client = require('../../redis/redis');
@@ -28,11 +28,10 @@ class BacketController {
 
   static async addToBacket(req, res) {
     try {
-      const { user } = res.local;
-      const { goodId } = req.param;
+      const { user } = res.locals;
+      const { goodId } = req.params;
       const result = await BacketService.addToBacket(user.id, goodId);
       const backetKey = `backet:${user.id}`;
-
       await redis.del(backetKey);
       console.log('Ключ на добавление удален');
 
